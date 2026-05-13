@@ -12,12 +12,22 @@ const resourceSchema = new mongoose.Schema(
       required: true,
       trim: true,
       lowercase: true,
-      enum: ["food", "housing", "mental-health", "financial-aid", "legal-services", "other"],
+      enum: ["food", "housing", "mental-health", "financial-aid", "legal-services", "healthcare", "other"],
     },
-    buildingAddress: {
+    description: {
       type: String,
-      required: true,
       trim: true,
+      default: "",
+    },
+    campus: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    location: {
+      type: String,
+      trim: true,
+      default: "",
     },
     eligibilitySummary: {
       type: String,
@@ -36,6 +46,11 @@ const resourceSchema = new mongoose.Schema(
         trim: true,
         default: "",
       },
+      website: {
+        type: String,
+        trim: true,
+        default: "",
+      },
     },
     tags: [
       {
@@ -44,25 +59,61 @@ const resourceSchema = new mongoose.Schema(
         lowercase: true,
       },
     ],
+    schedules: {
+      type: [
+        {
+          day: {
+            type: String,
+            enum: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+            lowercase: true,
+            trim: true,
+          },
+          open: {
+            type: String,
+            trim: true,
+            default: "",
+          },
+          close: {
+            type: String,
+            trim: true,
+            default: "",
+          },
+          notes: {
+            type: String,
+            trim: true,
+            default: "",
+          },
+        },
+      ],
+      default: [],
+    },
     hours: {
-        open: {
-          type: String, // "09:00"
-          trim: true,
-          default: ""
-        },
-        close: {
-          type: String, // "17:00"
-          trim: true,
-          default: ""
-        },
+      open: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      close: {
+        type: String,
+        trim: true,
+        default: "",
       },
     },
+    sourceUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+  },
   {
-    timestamps: true,
+    versionKey: false,
+    collection: "resource",
   }
 );
 
+
 resourceSchema.index({ category: 1 });
-resourceSchema.index({ name: "text", eligibilitySummary: "text", tags: "text" });
+resourceSchema.index({ campus: 1 });
+resourceSchema.index({ name: "text", description: "text", eligibilitySummary: "text", tags: "text", location: "text" });
 
 module.exports = mongoose.model("Resource", resourceSchema);

@@ -6,7 +6,18 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { fullName, email, password, salary, citizenshipStatus, campus, enrollmentStatus } = req.body;
+    const {
+      fullName,
+      email,
+      password,
+      studentId,
+      salary,
+      estimatedIncome,
+      citizenshipStatus,
+      address,
+      campus,
+      enrollmentStatus,
+    } = req.body;
 
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "Full Name, Email, and Password are required." });
@@ -21,8 +32,11 @@ router.post("/register", async (req, res) => {
       fullName,
       email,
       profile: {
+        studentId,
         salary,
+        estimatedIncome,
         citizenshipStatus,
+        address,
         campus,
         enrollmentStatus,
       },

@@ -22,7 +22,18 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     profile: {
+      studentId: {
+        type: String,
+        trim: true,
+        default: "",
+        index: true,
+      },
       salary: {
+        type: Number,
+        min: 0,
+        select: false,
+      },
+      estimatedIncome: {
         type: Number,
         min: 0,
         select: false,
@@ -33,6 +44,17 @@ const userSchema = new mongoose.Schema(
         enum: ["citizen", "permanent-resident", "international", "undocumented", "other", ""],
         default: "",
         select: false,
+      },
+      address: {
+        type: String,
+        trim: true,
+        default: "",
+        select: false,
+      },
+      campus: {
+        type: String,
+        trim: true,
+        default: "",
       },
       major: {
         type: String,
@@ -46,9 +68,6 @@ const userSchema = new mongoose.Schema(
       },
     },
   },
-  {
-    timestamps: true,
-  }
 );
 
 userSchema.methods.setPassword = async function setPassword(rawPassword) {
