@@ -12,24 +12,40 @@
   
   .category-buttons {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
     gap: 10px;
     margin-bottom: 30px;
+    width: 100%
   }
   
   .category-btn {
-    padding: 8px 16px;
-    border: 2px solid #5F259F;
-    border-radius: 20px;
-    background: white;
-    color: #5F259F;
-    cursor: pointer;
-    font-size: 14px;
+    flex: 1;
+  padding: 10px 8px;
+  border: 2px solid #5F259F;
+  border-radius: 8px;
+  background: white;
+  color: #5F259F;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: center;
   }
   
   .category-btn.active {
     background-color: #5F259F;
     color: white;
+  }
+  .search-bar {
+    flex: 1.5;
+    padding: 10px 16px;
+    border: 2px solid #5F259F;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    color: #333;
+  }
+  
+  .search-bar:focus {
+    border-color: #5F259F;
   }
   
   .resources-grid {
@@ -61,10 +77,13 @@
     padding: 4px 8px;
     border-radius: 10px;
     font-size: 12px;
-    background-color: #5F259F;
-    color: white;
+    background-color: #92E9CA;
+    color: #488B44;
   }
-  
+  .eligibility-badge.Likely {
+    background-color: #FFE5B4;
+    color: #B8860B;
+  }
   .card-location, .card-phone {
     font-size: 13px;
     color: #666;
@@ -86,6 +105,6 @@
   .loading-text {
     text-align: center;
     color: #5F259F;
-    font-size: 18px;
+    font-size: 30px;
     margin-top: 50px;
   }
