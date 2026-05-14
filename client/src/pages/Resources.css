@@ -34,17 +34,27 @@
     background-color: #5F259F;
     color: white;
   }
-  .search-bar {
+  .search-wrap {
     flex: 1.5;
-    padding: 10px 16px;
+    display: flex;
+    align-items: center;
     border: 2px solid #5F259F;
     border-radius: 8px;
+    background: white;
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .search-bar {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
     font-size: 13px;
     outline: none;
     color: #333;
+    background: transparent;
   }
   
-  .search-bar:focus {
+  .search-wrap:focus-within {
     border-color: #5F259F;
   }
   
@@ -88,6 +98,18 @@
     font-size: 13px;
     color: #666;
     margin: 5px 0;
+  }
+  .icon-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6B7280;
+  }
+  .resource-icon {
+    width: 14px;
+    height: 14px;
+    color: #9CA3AF;
+    flex-shrink: 0;
   }
   
   .view-details-btn {

@@ -1,148 +1,114 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Resources.css";
+import { API_BASE_URL } from "../config/api";
+
+const categories = [
+  { label: "All Resources", value: "all" },
+  { label: "Food", value: "food" },
+  { label: "Housing", value: "housing" },
+  { label: "Mental Health", value: "mental-health" },
+  { label: "Financial Aid", value: "financial-aid" },
+  { label: "Legal Services", value: "legal-services" },
+  { label: "Healthcare", value: "healthcare" },
+];
+
+const SearchIcon = () => (
+  <svg
+    className="resource-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path
+      d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path d="m20 20-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+const LocationIcon = () => (
+  <svg
+    className="resource-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path
+      d="M12 21s7-5.77 7-11a7 7 0 1 0-14 0c0 5.23 7 11 7 11Z"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="2" />
+  </svg>
+);
+
+const PhoneIcon = () => (
+  <svg
+    className="resource-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path
+      d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.08 5.18 2 2 0 0 1 5.06 3h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.62 2.62a2 2 0 0 1-.45 2.11L9.1 10.58a16 16 0 0 0 4.32 4.32l1.13-1.13a2 2 0 0 1 2.11-.45c.85.29 1.72.5 2.62.62A2 2 0 0 1 22 16.92Z"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 const Resources = () => {
   const [resources, setResources] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All Resources");
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
+    async function fetchResources() {
+      try {
+        setLoading(true);
+        setError("");
+        const response = await fetch(`${API_BASE_URL}/api/resources`);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const data = await response.json();
+        setResources(Array.isArray(data.resources) ? data.resources : []);
+      } catch (err) {
+        setError(err.message || "Failed to load resources");
+        setResources([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     fetchResources();
   }, []);
 
-  const fetchResources = () => {
-    const mockData = [
-      {
-        _id: "1",
-        name: "Hunter Food Pantry",
-        description: "Free food for Hunter College students",
-        category: "food",
-        location: "Thomas Hunter Hall, Room 101",
-        phone: "(123) 456-7890",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "2",
-        name: "Hunter House Assistance",
-        description: "Housing support for students in need",
-        category: "housing",
-        location: "North Building, Room 203",
-        phone: "(123) 456-7891",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "3",
-        name: "Counseling & Wellness",
-        description: "Free mental health services",
-        category: "mental health",
-        location: "Brookdale Campus",
-        phone: "(123) 456-7892",
-        eligibility: "Likely",
-      },
-      {
-        _id: "4",
-        name: "Pell Grant Assistance",
-        description: "Federal financial aid for eligible students",
-        category: "financial aid",
-        location: "Administration Building, Room 100",
-        phone: "(123) 456-7893",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "5",
-        name: "Emergency Grant Program",
-        description: "Emergency funds for students in crisis",
-        category: "financial aid",
-        location: "Financial Aid Office, Room 203",
-        phone: "(123) 456-7894",
-        eligibility: "Likely",
-      },
-      {
-        _id: "6",
-        name: "CUNY SNAP Benefits",
-        description: "Food stamp assistance for qualifying students",
-        category: "financial aid",
-        location: "Student Services, Room 301",
-        phone: "(123) 456-7895",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "7",
-        name: "Legal Aid Society",
-        description: "Free legal advice and representation",
-        category: "legal services",
-        location: "West Building, Room 110",
-        phone: "(123) 456-7896",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "8",
-        name: "Immigration Legal Help",
-        description: "Legal support for international students",
-        category: "legal services",
-        location: "International Student Office",
-        phone: "(123) 456-7897",
-        eligibility: "Likely",
-      },
-      {
-        _id: "9",
-        name: "Student Health Center",
-        description: "Primary healthcare services for students",
-        category: "healthcare",
-        location: "Health Building, Room 001",
-        phone: "(123) 456-7898",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "10",
-        name: "Mental Health Clinic",
-        description: "Psychiatric and therapy services",
-        category: "mental health",
-        location: "East Building, Room 405",
-        phone: "(123) 456-7899",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "11",
-        name: "TAP Program",
-        description: "Tuition assistance for New York State students",
-        category: "financial aid",
-        location: "Financial Aid Office",
-        phone: "(123) 456-7800",
-        eligibility: "Eligible",
-      },
-      {
-        _id: "12",
-        name: "CUNY Single Stop",
-        description: "Connects students to public benefits and resources",
-        category: "legal services",
-        location: "Student Union, Room 102",
-        phone: "(123) 456-7801",
-        eligibility: "Likely",
-      },
-    ];
-    setResources(mockData);
-    setLoading(false);
-  };
-
-  const categories = [
-    "All Resources",
-    "Food",
-    "Housing",
-    "Mental Health",
-    "Financial Aid",
-    "Legal Services",
-    "Healthcare",
-  ];
+  const selectedCategoryValue =
+    categories.find((item) => item.label === selectedCategory)?.value || "all";
 
   const filteredResources = resources
-    .filter(resource =>
-      selectedCategory === "All Resources" || resource.category === selectedCategory.toLowerCase()
+    .filter(
+      (resource) =>
+        selectedCategoryValue === "all" || resource.category === selectedCategoryValue
     )
-    .filter(resource =>
-      resource.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      resource.description.toLowerCase().includes(searchText.toLowerCase())
+    .filter(
+      (resource) =>
+        resource.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        (resource.description || "").toLowerCase().includes(searchText.toLowerCase())
     );
 
   return (
@@ -153,35 +119,49 @@ const Resources = () => {
         <div>
           <h1 className="welcome-text">Welcome, Student!</h1>
           <div className="category-buttons">
-            {categories.map(category => (
+            {categories.map((category) => (
               <button
-                key={category}
-                className={selectedCategory === category ? "category-btn active" : "category-btn"}
-                onClick={() => setSelectedCategory(category)}
+                key={category.value}
+                className={selectedCategory === category.label ? "category-btn active" : "category-btn"}
+                onClick={() => setSelectedCategory(category.label)}
               >
-                {category}
+                {category.label}
               </button>
             ))}
-            <input
-              type="text"
-              className="search-bar"
-              placeholder="🔍 Search..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
+            <div className="search-wrap">
+              <SearchIcon />
+              <input
+                type="text"
+                className="search-bar"
+                placeholder="Search..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+            </div>
           </div>
+          {error ? <p className="error-text">{error}</p> : null}
           <div className="resources-grid">
-            {filteredResources.map(resource => (
-              <div key={resource._id} className="resource-card">
+            {filteredResources.map((resource) => (
+              <div key={resource._id || resource.name} className="resource-card">
                 <div className="card-header">
                   <h3>{resource.name}</h3>
-                  <span className={`eligibility-badge ${resource.eligibility}`}>
-                    {resource.eligibility}
+                  <span className={`status-badge ${(resource.status || "unknown").toLowerCase()}`}>
+                    {(resource.status || "unknown").toUpperCase()}
                   </span>
                 </div>
-                <p>{resource.description}</p>
-                <p className="card-location">📍 {resource.location}</p>
-                <p className="card-phone">📞 {resource.phone}</p>
+                <p>{resource.description || "No description available."}</p>
+                <p className="card-location">
+                  <span className="icon-text">
+                    <LocationIcon />
+                    <span>{resource.location || "N/A"}</span>
+                  </span>
+                </p>
+                <p className="card-phone">
+                  <span className="icon-text">
+                    <PhoneIcon />
+                    <span>{resource.contact?.phone || "N/A"}</span>
+                  </span>
+                </p>
                 <button className="view-details-btn">View Details</button>
               </div>
             ))}
