@@ -1,0 +1,91 @@
+.resources-container {
+    padding: 20px;
+    background-color: #F5F5F5;
+    min-height: 100vh;
+  }
+  
+  .welcome-text {
+    color: #5F259F;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .category-btn {
+    padding: 8px 16px;
+    border: 2px solid #5F259F;
+    border-radius: 20px;
+    background: white;
+    color: #5F259F;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .category-btn.active {
+    background-color: #5F259F;
+    color: white;
+  }
+  
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  .resource-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .card-header h3 {
+    color: #5F259F;
+    font-size: 16px;
+  }
+  
+  .eligibility-badge {
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    background-color: #5F259F;
+    color: white;
+  }
+  
+  .card-location, .card-phone {
+    font-size: 13px;
+    color: #666;
+    margin: 5px 0;
+  }
+  
+  .view-details-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #5F259F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .loading-text {
+    text-align: center;
+    color: #5F259F;
+    font-size: 18px;
+    margin-top: 50px;
+  }
