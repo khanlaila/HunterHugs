@@ -1,0 +1,139 @@
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+  }
+  
+  .profile-banner {
+    width: 100%;
+    height: 200px;
+    background-color: #2c2c2c;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 16px;
+  }
+  
+  .profile-avatar {
+    position: absolute;
+    bottom: -50px;
+    left: 40px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid white;
+    overflow: hidden;
+  }
+  
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .edit-profile-btn {
+    background: white;
+    color: #5F259F;
+    border: 2px solid #5F259F;
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .edit-profile-btn:hover {
+    background: #5F259F;
+    color: white;
+  }
+  
+  .profile-info {
+    margin-top: 60px;
+    padding: 0 40px;
+  }
+  
+  .profile-info h2 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .pronouns {
+    font-size: 16px;
+    color: #888;
+    margin-left: 10px;
+  }
+  
+  .profile-details {
+    display: flex;
+    gap: 40px;
+    padding: 30px 40px;
+  }
+  
+  .academic-info {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .academic-info table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .academic-info td {
+    padding: 10px 8px;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  .academic-info td:first-child {
+    color: #888;
+    width: 100px;
+  }
+  
+  .academic-info input {
+    border: 1px solid #5F259F;
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 100%;
+  }
+  
+  .personal-details {
+    flex: 1.5;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .personal-details h3 {
+    color: #5F259F;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  
+  .detail-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  
+  .detail-row label {
+    color: #888;
+    font-size: 13px;
+  }
+  
+  .detail-row span {
+    color: #333;
+    font-size: 14px;
+  }
+  
+  .detail-row input {
+    border: 1px solid #5F259F;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
