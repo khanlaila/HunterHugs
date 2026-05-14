@@ -10,16 +10,38 @@ const Resources = () => {
     fetchResources();
   }, []);
 
-  const fetchResources = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/resources");
-      const data = await response.json();
-      setResources(data);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching resources:", error);
-      setLoading(false);
-    }
+  const fetchResources = () => {
+    const mockData = [
+      {
+        _id: "1",
+        name: "Hunter Food Pantry",
+        description: "Free food for Hunter College students",
+        category: "food",
+        location: "Thomas Hunter Hall, Room 101",
+        phone: "(123) 456-7890",
+        eligibility: "Eligible",
+      },
+      {
+        _id: "2",
+        name: "Hunter House Assistance",
+        description: "Housing support for students in need",
+        category: "housing",
+        location: "North Building, Room 203",
+        phone: "(123) 456-7891",
+        eligibility: "Eligible",
+      },
+      {
+        _id: "3",
+        name: "Counseling & Wellness",
+        description: "Free mental health services",
+        category: "mental health",
+        location: "Brookdale Campus",
+        phone: "(123) 456-7892",
+        eligibility: "Likely",
+      },
+    ];
+    setResources(mockData);
+    setLoading(false);
   };
 
   const categories = [
@@ -34,7 +56,7 @@ const Resources = () => {
 
   const filteredResources = selectedCategory === "All Resources"
     ? resources
-    : resources.filter(resource => resource.category === selectedCategory);
+    : resources.filter(resource => resource.category === selectedCategory.toLowerCase());
 
   return (
     <div className="resources-container">
