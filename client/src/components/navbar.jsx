@@ -10,6 +10,10 @@ function Navbar() {
       </Link>
 
       <nav className="navbar-links">
+        <NavLink to="/home" className="nav-link">
+          Home
+        </NavLink>
+
         <NavLink to="/resources" className="nav-link">
           Resources
         </NavLink>
