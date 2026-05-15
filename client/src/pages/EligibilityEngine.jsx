@@ -1,164 +1,331 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./EligibilityEngine.css";
+import { mockResources } from "../data/mockResources";
+
+const profileQuestions = [
+  {
+    key: "enrollment",
+    title: "Enrollment Status",
+    options: ["Full-Time", "Part-Time", "Non-Degree"],
+  },
+  {
+    key: "income",
+    title: "Income Bracket",
+    options: ["Under 25k/year", "25k-50k/year", "50k+ year"],
+  },
+  {
+    key: "housing",
+    title: "Housing Situation",
+    options: ["Renting off campus", "Living at home", "Unstable/at Risk"],
+  },
+  {
+    key: "citizenship",
+    title: "Citizenship Status",
+    options: ["US Citizen/Resident", "International Student", "DACA Undocumented"],
+  },
+];
+
+function ruleMatches(ruleValues, userValue) {
+  if (!ruleValues || ruleValues.length === 0) {
+    return true;
+  }
+
+  return ruleValues.includes(userValue);
+}
+
+function formatCategoryLabel(category) {
+  if (!category) {
+    return "";
+  }
+
+  return category
+    .split("-")
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+}
+
+function getMatchedReasons(resource, profile) {
+  const rules = resource.eligibilityRules;
+  const reasons = [];
+
+  if (ruleMatches(rules.enrollment, profile.enrollment)) {
+    reasons.push("Matches your enrollment status");
+  }
+
+  if (ruleMatches(rules.income, profile.income)) {
+    reasons.push("Relevant to your income bracket");
+  }
+
+  if (ruleMatches(rules.housing, profile.housing)) {
+    reasons.push("Relevant to your housing situation");
+  }
+
+  if (ruleMatches(rules.citizenship, profile.citizenship)) {
+    reasons.push("Matches your citizenship status");
+  }
+
+  return reasons;
+}
+
+function getMatchScore(resource, profile) {
+  const rules = resource.eligibilityRules;
+
+  const checks = [
+    ruleMatches(rules.enrollment, profile.enrollment),
+    ruleMatches(rules.income, profile.income),
+    ruleMatches(rules.housing, profile.housing),
+    ruleMatches(rules.citizenship, profile.citizenship),
+  ];
+
+  const score = checks.filter(Boolean).length;
+
+  return Math.round((score / checks.length) * 100);
+}
 
 const EligibilityEngine = () => {
-  const [step, setStep] = useState(1);
   const [profile, setProfile] = useState({
     enrollment: "",
     income: "",
     housing: "",
     citizenship: "",
   });
+  const [hasSearched, setHasSearched] = useState(false);
+  const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hi! Based on your profile, I'll match you with resources you actually qualify for!", sender: "bot" }
+    {
+      sender: "bot",
+      text: "Fill out your profile and I’ll help you find resources that may fit your situation.",
+    },
   ]);
-  const [inputText, setInputText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  //const [resources, setResources] = useState([]);
+  //useEffect(() => {
+  //FUTURE MONGODB CONNECTION:
+  //Uncomment this when the backend resources endpoint is ready
+  /*
+  async function fetchResources() {
+    try {
+      const response = await fetch("http://localhost:5000/api/resources");
+      const data = await response.json();
+      setResources(data.resources);
+    } catch (error) {
+      console.error("Failed to fetch resources:", error);
+    }
+  }
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  fetchResources();
+  */
+ //}, []);
 
-  const handleSelect = (category, value) => {
-    setProfile(prev => ({ ...prev, [category]: value }));
+  const isProfileComplete = Object.values(profile).every(Boolean);
+
+  const matchedResources = useMemo(() => {
+    if (!hasSearched) {
+      return [];
+    }
+
+    return mockResources
+      .map((resource) => ({
+        ...resource,
+        matchScore: getMatchScore(resource, profile),
+        matchedReasons: getMatchedReasons(resource, profile),
+      }))
+      .filter((resource) => resource.matchScore >= 50)
+      .sort((a, b) => b.matchScore - a.matchScore);
+  }, [hasSearched, profile, /*resources*/]);
+
+  const handleSelect = (key, value) => {
+    setProfile((previousProfile) => ({
+      ...previousProfile,
+      [key]: value,
+    }));
   };
 
   const handleFindResources = () => {
-    if (!profile.enrollment || !profile.income || !profile.housing || !profile.citizenship) {
-      alert("Please select an option for each category!");
+    if (!isProfileComplete) {
+      setMessages((previousMessages) => [
+        ...previousMessages,
+        {
+          sender: "bot",
+          text: "Please answer each profile question first so I can give you better matches.",
+        },
+      ]);
       return;
     }
-    setStep(2);
+
+    setHasSearched(true);
+
+    setMessages((previousMessages) => [
+      ...previousMessages,
+      {
+        sender: "bot",
+        text: "I found resources that may match your profile. You can ask me which one to start with, what each resource does, or what documents you may need.",
+      },
+    ]);
   };
 
-  const sendMessage = async () => {
-    if (!inputText.trim()) return;
-    const userMessage = { id: messages.length + 1, text: inputText, sender: "user" };
-    setMessages(prev => [...prev, userMessage]);
-    setInputText("");
-    setIsLoading(true);
-    try {
-      const response = await fetch("http://localhost:5000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: inputText, profile })
-      });
-      const data = await response.json();
-      setMessages(prev => [...prev, { id: messages.length + 2, text: data.reply, sender: "bot" }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { id: messages.length + 2, text: "Sorry, I'm having trouble connecting. Please try again!", sender: "bot" }]);
-    } finally {
-      setIsLoading(false);
+  const handleSendMessage = () => {
+    const question = chatInput.trim();
+
+    if (!question) {
+      return;
     }
+
+    const resourceNames = matchedResources
+      .slice(0, 3)
+      .map((resource) => resource.name)
+      .join(", ");
+
+  //FUTURE GEMINI CONNECTION:
+  //Later replace this mock botReply with a fetch call to POST http://localhost:5000/api/chat
+  //Send the user's question, profile, and matchedResources to the backend.
+
+    const botReply =
+      matchedResources.length > 0
+        ? `Based on your profile, your strongest matches are: ${resourceNames}. For now, this is a mock chatbot response. Later, Gemini can use these matched resources to answer your question more specifically.`
+        : "I do not have matched resources yet. Fill out your profile and click Find My Resources first.";
+
+    setMessages((previousMessages) => [
+      ...previousMessages,
+      { sender: "user", text: question },
+      { sender: "bot", text: botReply },
+    ]);
+
+    setChatInput("");
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") sendMessage();
-  };
+  return (
+    <div className="eligibility-page">
+      <aside className="profile-sidebar">
+        <h2>Your Profile</h2>
+        <p className="sidebar-subtitle">
+          Select the options that best describe your current situation.
+        </p>
 
-  if (step === 1) {
-    return (
-      <div className="eligibility-container">
-        <p className="step-label">Step 1 of 1</p>
-        <h1 className="eligibility-title">Your Profile</h1>
-        <p className="eligibility-subtitle">We'll match you with the resources you actually qualify for</p>
-        <div className="quiz-cards">
-          <div className="quiz-card">
-            <h3>Enrollment Status</h3>
-            {["Full-Time", "Part-Time", "Non-Degree"].map(option => (
-              <label key={option} className="quiz-option">
-                <input type="radio" name="enrollment" checked={profile.enrollment === option} onChange={() => handleSelect("enrollment", option)} />
-                {option}
-              </label>
-            ))}
+        {profileQuestions.map((question) => (
+          <div className="profile-question" key={question.key}>
+            <h3>{question.title}</h3>
+
+            <div className="option-list">
+              {question.options.map((option) => {
+                const isSelected = profile[question.key] === option;
+
+                return (
+                  <button
+                    type="button"
+                    key={option}
+                    className={`profile-option ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleSelect(question.key, option)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="quiz-card">
-            <h3>Income Bracket</h3>
-            {["Under 25k/year", "25k-50k/year", "50k+ year"].map(option => (
-              <label key={option} className="quiz-option">
-                <input type="radio" name="income" checked={profile.income === option} onChange={() => handleSelect("income", option)} />
-                {option}
-              </label>
-            ))}
-          </div>
-          <div className="quiz-card">
-            <h3>Housing</h3>
-            {["Renting off campus", "Living at home", "Unstable/at Risk"].map(option => (
-              <label key={option} className="quiz-option">
-                <input type="radio" name="housing" checked={profile.housing === option} onChange={() => handleSelect("housing", option)} />
-                {option}
-              </label>
-            ))}
-          </div>
-          <div className="quiz-card">
-            <h3>Citizenship</h3>
-            {["US Citizen/Resident", "International Student", "DACA Undocumented"].map(option => (
-              <label key={option} className="quiz-option">
-                <input type="radio" name="citizenship" checked={profile.citizenship === option} onChange={() => handleSelect("citizenship", option)} />
-                {option}
-              </label>
-            ))}
-          </div>
-        </div>
+        ))}
+
         <button className="find-resources-btn" onClick={handleFindResources}>
           Find my resources
         </button>
-      </div>
-    );
-  }
+      </aside>
 
-  return (
-    <div className="eligibility-layout">
-      <div className="profile-sidebar">
-        <h3>Your Profile</h3>
-        <div className="profile-section">
-          <h4>Enrollment Status</h4>
-          <p>● {profile.enrollment}</p>
-        </div>
-        <div className="profile-section">
-          <h4>Income Bracket</h4>
-          <p>● {profile.income}</p>
-        </div>
-        <div className="profile-section">
-          <h4>Housing Situation</h4>
-          <p>● {profile.housing}</p>
-        </div>
-        <div className="profile-section">
-          <h4>Citizenship Status</h4>
-          <p>● {profile.citizenship}</p>
-        </div>
-      </div>
-      <div className="chatbot-container">
-        <div className="chat-header">
-          <h2>HunterHugs AI</h2>
-          <p>Your personal resource assistant</p>
-        </div>
-        <div className="messages-container">
-          {messages.map(message => (
-            <div key={message.id} className={`message ${message.sender === "user" ? "user-message" : "bot-message"}`}>
-              <p>{message.text}</p>
+      <main className="eligibility-main">
+        <section className="results-panel">
+          <div className="section-heading">
+            <p className="eyebrow">HunterHugs Eligibility Engine</p>
+            <h1>Recommended Resources</h1>
+            <p>
+              These matches are based on your profile. This mock version is ready
+              to connect to MongoDB and Gemini later.
+            </p>
+          </div>
+
+          {!hasSearched && (
+            <div className="empty-state">
+              <h2>No matches yet</h2>
+              <p>
+                Complete your profile on the left, then click Find my resources.
+              </p>
             </div>
-          ))}
-          {isLoading && <div className="bot-message message"><p>Typing...</p></div>}
-          <div ref={messagesEndRef} />
-        </div>
-        <div className="chat-input-container">
-          <input
-            type="text"
-            className="chat-input"
-            placeholder="Message HunterHugs..."
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <button className="send-button" onClick={sendMessage}>Send</button>
-        </div>
-      </div>
+          )}
+
+          {hasSearched && matchedResources.length === 0 && (
+            <div className="empty-state">
+              <h2>No strong matches found</h2>
+              <p>
+                Try changing your profile answers or browsing all resources.
+              </p>
+            </div>
+          )}
+
+          {hasSearched && matchedResources.length > 0 && (
+            <div className="resource-grid">
+              {matchedResources.map((resource) => (
+                <article className="resource-card" key={resource.id}>
+                  <div className="resource-card-header">
+                    <span className="category-pill">{formatCategoryLabel(resource.category)}</span>
+                    <span className="match-score">{resource.matchScore}% match</span>
+                  </div>
+
+                  <h2>{resource.name}</h2>
+                  <p className="resource-location">{resource.location}</p>
+                  <p className="resource-description">{resource.description}</p>
+
+                  <div className="reason-list">
+                    {resource.matchedReasons.slice(0, 3).map((reason) => (
+                      <span key={reason}>{reason}</span>
+                    ))}
+                  </div>
+
+                  <a href={resource.sourceUrl} target="_blank" rel="noreferrer">
+                    View resource
+                  </a>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="chat-panel">
+          <div className="chat-header">
+            <h2>HunterHugs AI</h2>
+            <p>Your personal resource assistant</p>
+          </div>
+
+          <div className="messages-container">
+            {messages.map((message, index) => (
+              <div
+                key={`${message.sender}-${index}`}
+                className={`message ${
+                  message.sender === "user" ? "user-message" : "bot-message"
+                }`}
+              >
+                <p>{message.text}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="chat-input-container">
+            <input
+              type="text"
+              className="chat-input"
+              placeholder="Ask about your matched resources..."
+              value={chatInput}
+              onChange={(event) => setChatInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleSendMessage();
+                }
+              }}
+            />
+
+            <button className="send-button" onClick={handleSendMessage}>
+              Send
+            </button>
+          </div>
+        </section>
+      </main>
     </div>
   );
 };
