@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import "./Resources.css";
+import SearchBar from "../components/SearchBar";
 import { API_BASE_URL } from "../config/api";
 
 const categories = [
@@ -69,11 +71,16 @@ const PhoneIcon = () => (
 );
 
 const Resources = () => {
+  const [searchParams] = useSearchParams();
   const [resources, setResources] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All Resources");
   const [loading, setLoading] = useState(true);
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(() => searchParams.get("q") || "");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setSearchText(searchParams.get("q") || "");
+  }, [searchParams]);
 
   useEffect(() => {
     async function fetchResources() {
@@ -130,12 +137,11 @@ const Resources = () => {
             ))}
             <div className="search-wrap">
               <SearchIcon />
-              <input
-                type="text"
-                className="search-bar"
-                placeholder="Search..."
+              <SearchBar
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search..."
+                inputClassName="search-bar"
               />
             </div>
           </div>
