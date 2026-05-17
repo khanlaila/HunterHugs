@@ -1,0 +1,299 @@
+[
+  {
+    "Name": "The Purple Apron Food Pantry",
+    "Category": "Food Pantry",
+    "Campus": "68th St (main campus, WB103) + Brookdale (closed permanently)",
+    "Hours": "Check @hcpurpleapron on Instagram for current schedule. Room B103, Lower Level of West Building\nMonday: 1:00–6:30 pm\nTuesday: 2:30–6:30 pm\nWednesday: 1:00–6:30 pm\nThursday: 2:30–6:30 pm\nFriday: 9:00 am–1:30 pm\nSaturday: 10:00 am–2:30 pm",
+    "Eligibility": "All currently enrolled CUNY students with valid CUNY ID. If you have questions about this program, email Raquel Torres at rt2049@hunter.cuny.edu.",
+    "Required Docs": "Valid CUNY ID",
+    "URL": "https://www.hunter.cuny.edu/students/health-wellness/emergency-support-resources/"
+  },
+  {
+    "Name": "Dean of Students Emergency Fund",
+    "Category": "Emergency Grants",
+    "Campus": "68th St",
+    "Hours": "Contact office for hours",
+    "Eligibility": "Must be enrolled in a matriculated program and currently in classes; emergencies include job loss, homelessness, eviction, medical issues, death in family",
+    "Required Docs": "Contact office. Application https://app.grouptrail.com/public/externalForm/AlVdKn8irFud1QWU92DEsVeNcEFYtliXDfnL4KGu",
+    "URL": "hunter.cuny.edu/students/health-wellness/emergency-support-resources/"
+  },
+  {
+    "Name": "Counseling & Wellness Services",
+    "Category": "Mental Health",
+    "Campus": "68th St",
+    "Hours": "Contact office for hours",
+    "Eligibility": "All currently enrolled Hunter students",
+    "Required Docs": "None, free",
+    "URL": "hunter.cuny.edu/students/health-wellness/counseling-and-wellness-services/counseling-services/"
+  },
+  {
+    "Name": "Mental Health (crisis line)",
+    "Category": "Mental Health",
+    "Campus": "All campuses / remote",
+    "Hours": "24/7",
+    "Eligibility": "All CUNY students",
+    "Required Docs": "text HOME to 741741",
+    "URL": "cuny.edu"
+  },
+  {
+    "Name": "Financial Aid Office",
+    "Category": "Financial Aid",
+    "Campus": "68th St, North Building Room 217",
+    "Hours": "Contact office / Virtual Front Desk available",
+    "Eligibility": "Matriculated Hunter students",
+    "Required Docs": "FAFSA, student ID",
+    "URL": "hunter.cuny.edu/students/financial-aid/apply-for-financial-aid/"
+  },
+  {
+    "Name": "Immigrant Student Success Center",
+    "Category": "Legal Services",
+    "Campus": "68th St",
+    "Hours": "Contact office (212) 396-6846",
+    "Eligibility": "Undocumented, DACA, TPS, and immigrant Hunter students",
+    "Required Docs": "Contact office",
+    "URL": "hunter.cuny.edu/students/student-affairs/immigrant-student-success-center/"
+  },
+  {
+    "Name": "CUNY Citizenship Now!",
+    "Category": "Legal Services",
+    "Campus": "All CUNY campuses / citywide",
+    "Hours": "Contact for appointment",
+    "Eligibility": "All CUNY students and their families",
+    "Required Docs": "Varies by case",
+    "URL": "cuny.edu/about/administration/offices/communications-marketing/immigrationresourcesandinformation/"
+  },
+  {
+    "Name": "Living@Hunter Residence Life",
+    "Category": "Housing",
+    "Campus": "Brookdale (25 St), Midtown East (51 St), Hunter's Apartments (79 St)",
+    "Hours": "Contact office",
+    "Eligibility": "Full-time matriculated Hunter students; undergrad 2.0+ GPA, grad 3.0+ GPA",
+    "Required Docs": "Housing application via webforms.hunter.cuny.edu",
+    "URL": "hunter.cuny.edu/students/campus-life/residence-life/"
+  },
+  {
+    "Name": "NYC Housing Connect (Affordable Housing Lotteries)",
+    "Category": "Housing",
+    "Campus": "citywide",
+    "Hours": "Online 24/7",
+    "Eligibility": "NYC residents meeting income requirements",
+    "Required Docs": "Income verification, ID",
+    "URL": "nyc.gov/site/hpd/services-and-information/affordable-housing.page"
+  },
+  {
+    "Name": "yourpeer.nyc",
+    "Category": "Clothing Closet",
+    "Campus": "citywide",
+    "Hours": "",
+    "Eligibility": "",
+    "Required Docs": "",
+    "URL": "yourpeer.nyc"
+  },
+  {
+    "Name": "Pantry Link Smart Vending Machines",
+    "Category": "Food Pantry",
+    "Campus": "Silberman (119th St & 3rd Ave, East Harlem)",
+    "Hours": "Any time Silberman campus is open (24/7 access advantage)",
+    "Eligibility": "All Hunter students: scan QR code, take a short survey, receive points for food",
+    "Required Docs": "Hunter ID / QR code scan",
+    "URL": "nycfoodpolicy.org (run by Hunter College NYC Food Policy Center)"
+  },
+  {
+    "Name": "CUNY SNAP Assistance",
+    "Category": "Financial Aid",
+    "Campus": "All campuses / remote",
+    "Hours": "Contact CUNY or HRA",
+    "Eligibility": "CUNY students who meet federal exemptions (work-study, caregiving, etc.)",
+    "Required Docs": "FAFSA info, income documentation",
+    "URL": "cuny.edu/about/administration/offices/student-affairs/programs-services/snap/"
+  },
+  {
+    "Name": "Welfare Rights Initiative (WRI)",
+    "Category": "Legal Services",
+    "Campus": "68th St, North Building Room 302",
+    "Hours": "(212) 650-3592",
+    "Eligibility": "All Hunter students receiving or seeking public assistance (cash assistance, SNAP, welfare)",
+    "Required Docs": "Contact office",
+    "URL": "wri-nyc.org"
+  },
+  {
+    "Name": "Federal Work Study",
+    "Category": "Financial Aid",
+    "Campus": "68th St, North Building Room 241",
+    "Hours": "Contact office",
+    "Eligibility": "Students with demonstrated financial need via FAFSA",
+    "Required Docs": "FAFSA",
+    "URL": "hunter.cuny.edu/students/financial-aid/"
+  },
+  {
+    "Name": "NYC WELL",
+    "Category": "Mental Health",
+    "Campus": "N/A - citywide / remote",
+    "Hours": "24/7",
+    "Eligibility": "All NYC residents",
+    "Required Docs": "call 1-888-NYC-WELL or text \"WELL\" to 65173",
+    "URL": "nycwell.cityofnewyork.us"
+  },
+  {
+    "Name": "The Trevor Project (LGBTQ+)",
+    "Category": "Mental Health",
+    "Campus": "remote",
+    "Hours": "24/7",
+    "Eligibility": "LGBTQ+ youth",
+    "Required Docs": "none",
+    "URL": "thetrevorproject.org"
+  },
+  {
+    "Name": "HCAP Mental Health Program",
+    "Category": "Mental Health",
+    "Campus": "68th st",
+    "Hours": "Contact HCAP",
+    "Eligibility": "Asian American & Pacific Islander students and other high-need students",
+    "Required Docs": "None",
+    "URL": "huntercap.org/hcap-programs/mental-health-program/"
+  },
+  {
+    "Name": "NYC CITYFEPS (Eviction Prevention)",
+    "Category": "Housing",
+    "Campus": "citywide",
+    "Hours": "Contact HRA / 311",
+    "Eligibility": "Low-income NYC renters facing eviction",
+    "Required Docs": "Income docs, lease, eviction notice",
+    "URL": "nyc.gov/hra"
+  },
+  {
+    "Name": "Healthy CUNY Housing Resources",
+    "Category": "Housing",
+    "Campus": "All campuses / remote",
+    "Hours": "online",
+    "Eligibility": "All CUNY students experiencing housing insecurity",
+    "Required Docs": "None to browse",
+    "URL": "healthycuny.org/resources/housing"
+  },
+  {
+    "Name": "CUNY Immigration Assistance Project (CIAP)",
+    "Category": "Legal Services",
+    "Campus": "All CUNY campuses / citywide",
+    "Hours": "Contact CUNY",
+    "Eligibility": "CUNY students, faculty, staff impacted by immigration policy changes",
+    "Required Docs": "Contact office",
+    "URL": "cuny.edu/about/administration/offices/communications-marketing/immigrationresourcesandinformation/"
+  },
+  {
+    "Name": "Office of AccessABILITY",
+    "Category": "Disability Support",
+    "Campus": "68th St, East Building Room 1214B",
+    "Hours": "(212) 772-4857 / accessability@hunter.cuny.edu",
+    "Eligibility": "Students with documented physical, learning, or psychological disabilities",
+    "Required Docs": "Documentation from physician, psychiatrist, psychologist, or clinical social worker (dated within 5 years)",
+    "URL": "hunter.cuny.edu/students/health-wellness/accessibility/"
+  },
+  {
+    "Name": "Student Veteran Services + PROVE Program",
+    "Category": "Veterans Support",
+    "Campus": "68th St, Thomas Hunter Hall Room 111/112",
+    "Hours": "Contact office",
+    "Eligibility": "Student veterans and military dependents",
+    "Required Docs": "Military discharge papers",
+    "URL": "hunter.cuny.edu/students/academic-planning/student-veterans-services/"
+  },
+  {
+    "Name": "Children's Learning Center",
+    "Category": "Childcare",
+    "Campus": "68th st",
+    "Hours": "Available year-round including winter/summer sessions",
+    "Eligibility": "Hunter students with children",
+    "Required Docs": "Contact office",
+    "URL": "hunter.cuny.edu/students/health-wellness/"
+  },
+  {
+    "Name": "Hunter College AANAPISI Project (HCAP)",
+    "Category": "AAPI & First-Gen Support",
+    "Campus": "68th st",
+    "Hours": "Contact HCAP",
+    "Eligibility": "AAPI students, first-gen students, English Language Learners, immigrant students",
+    "Required Docs": "None",
+    "URL": "huntercap.org"
+  },
+  {
+    "Name": "Career Development Services (CDS)",
+    "Category": "Employment/Career",
+    "Campus": "68th St, East Building Room 805",
+    "Hours": "Contact office (212) 772-4850 / career@hunter.cuny.edu",
+    "Eligibility": "All currently enrolled Hunter students AND alumni",
+    "Required Docs": "Hunter ID / CUNYfirst login for CareerHunter portal",
+    "URL": "hunter.cuny.edu/students/career-center/"
+  },
+  {
+    "Name": "Rockowitz Writing Center",
+    "Category": "Academic Support",
+    "Campus": "68th St, East Building 7th floor (Silverstein Success Center)",
+    "Hours": "(212) 772-4212 / rwc@hunter.cuny.edu",
+    "Eligibility": "All hunter students",
+    "Required Docs": "Tutors help with all stages of the writing process including admission and scholarship essays, resumes, and cover letters",
+    "URL": "hunter.cuny.edu/students/academic-planning/learning-centers-and-tutoring/"
+  },
+  {
+    "Name": "Dolciani Math Center",
+    "Category": "Academic Support",
+    "Campus": "68th St, East Building 7th floor",
+    "Hours": "(212) 772-5371",
+    "Eligibility": "All hunter students",
+    "Required Docs": "None",
+    "URL": "hunter.cuny.edu/students/academic-planning/learning-centers-and-tutoring/"
+  },
+  {
+    "Name": "Skirball Science Learning Center",
+    "Category": "Academic Support",
+    "Campus": "68th St, East Building 7th floor",
+    "Hours": "(212) 396-6458",
+    "Eligibility": "All Hunter students (Chemistry, Biology, Physics, Computer Science)",
+    "Required Docs": "None: also loans textbooks and study guides for free",
+    "URL": "library.hunter.cuny.edu/skirball-science-learning-center"
+  },
+  {
+    "Name": "Hunter Micro-Internship Program",
+    "Category": "Paid Ops",
+    "Campus": "Remote / online",
+    "Hours": "Flexible, ~10 hours per project",
+    "Eligibility": "Current Hunter undergraduate students",
+    "Required Docs": "Parker Dewey account: Hunter Career Center funds $200 per 10-hour project, up to two projects per student: essentially free paid work experience",
+    "URL": "info.parkerdewey.com/student/hunter.cuny"
+  },
+  {
+    "Name": "CUNY Internship Programs (NYC government jobs)",
+    "Category": "Paid Ops",
+    "Campus": "Citywide NYC agencies",
+    "Hours": "Up to 12 months while enrolled",
+    "Eligibility": "All currently enrolled CUNY students",
+    "Required Docs": "CUNY Handshake acc",
+    "URL": "cuny.edu/employment/student-jobs/internships/cuny-internship-programs/"
+  },
+  {
+    "Name": "JFEW Eleanor Roosevelt Scholars Program",
+    "Category": "Scholarships/Fellowships",
+    "Campus": "68th St / Roosevelt House",
+    "Hours": "Women at Hunter College, junior and senior year",
+    "Eligibility": "Competitive program offering tuition assistance, a paid summer internship in New York, a 3-day Washington DC seminar, dedicated workshops, and invitations to special events at Roosevelt House",
+    "Required Docs": "",
+    "URL": "oosevelthouse.hunter.cuny.edu/p-cubed/student-engagement/"
+  },
+  {
+    "Name": "Office of Prestigious Scholarships & Fellowships",
+    "Category": "Scholarships/Fellowships",
+    "Campus": "68th st",
+    "Hours": "All Hunter students: they help you apply for national awards like Fulbright, Boren, Critical Language Scholarship, Watson, etc.",
+    "Eligibility": "Offers one-on-one review of application essays and teaches personal statement workshops. Hunter students have won virtually every major national and international scholarship",
+    "Required Docs": "",
+    "URL": "hunter.cuny.edu/ugresearch/forstudents/funding-awards"
+  },
+  {
+    "Name": "Research Programs with Stipends",
+    "Category": "Scholarships/Fellowships",
+    "Campus": "68th st",
+    "Hours": "",
+    "Eligibility": "Undergraduate students (varies by program)",
+    "Required Docs": "Hunter has multiple research and mentorship training programs that pay stipends",
+    "URL": "hunter.cuny.edu/ugresearch/forstudents/funding-awards"
+  }
+]
