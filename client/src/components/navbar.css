@@ -1,18 +1,35 @@
 .navbar {
   width: 100%;
   min-height: 86px;
-  background-color: #5b2e91;
+  background:
+    linear-gradient(90deg, rgba(68, 31, 118, 0.92), rgba(68, 31, 118, 0.78)),
+    url("https://upload.wikimedia.org/wikipedia/commons/e/ee/Jenmedia_images_hunter_college_manhattan_cropped_1.jpg");
+  background-position: center center;
+  background-size: cover;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 66px;
   box-sizing: border-box;
+  position: relative;
+  isolation: isolate;
+}
+
+.navbar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(91, 46, 145, 0.18), rgba(91, 46, 145, 0.32));
+  pointer-events: none;
+  z-index: 0;
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
   text-decoration: none;
+  position: relative;
+  z-index: 1;
 }
 
 .navbar-logo-img {
@@ -24,7 +41,12 @@
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 150px;
+  justify-content: space-evenly;
+  gap: 0;
+  flex: 1;
+  max-width: 980px;
+  position: relative;
+  z-index: 1;
 }
 
 .nav-link {
@@ -32,6 +54,7 @@
   text-decoration: none;
   font-size: 20px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -51,8 +74,12 @@
   background: none;
   border: none;
   color: white;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
 }
 
 .logout-button:hover {

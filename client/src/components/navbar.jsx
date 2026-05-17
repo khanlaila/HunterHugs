@@ -5,7 +5,7 @@ import "./navbar.css";
 function Navbar() {
   return (
     <header className="navbar">
-      <Link to="/" className="navbar-logo">
+      <Link to="/home" className="navbar-logo">
         <img src={logo} alt="Hunter Hugs Logo" className="navbar-logo-img" />
       </Link>
 
@@ -29,11 +29,10 @@ function Navbar() {
         <NavLink to="/profile" className="nav-link">
           Profile
         </NavLink>
+        <button className="logout-button" type="button">
+          Logout
+        </button>
       </nav>
-
-      <button className="logout-button">
-        Logout
-      </button>
     </header>
   );
 }
