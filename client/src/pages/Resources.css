@@ -129,9 +129,8 @@
 
 .resource-card-header {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .resource-category {
@@ -146,27 +145,36 @@
 .resource-card h2 {
   margin: 0;
   color: #231235;
-  font-size: 1.2rem;
-  line-height: 1.25;
+  font-size: 1.25rem;
+  line-height: 1.18;
+}
+
+.resource-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .resource-campus-pill {
-  flex: 0 0 auto;
-  max-width: 40%;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
   border-radius: 999px;
-  padding: 6px 10px;
+  padding: 6px 12px;
   background: #f0e7ff;
   color: #5f259f;
   font-size: 12px;
   font-weight: 700;
-  line-height: 1.25;
-  text-align: right;
+  line-height: 1.35;
+  text-align: left;
 }
 
 .resource-details {
   display: grid;
-  gap: 14px;
+  gap: 16px;
   margin: 0;
+  padding-top: 4px;
+  border-top: 1px solid rgba(95, 37, 159, 0.08);
 }
 
 .resource-details div {
@@ -185,7 +193,7 @@
 .resource-details dd {
   margin: 0;
   color: #2c2238;
-  line-height: 1.5;
+  line-height: 1.58;
   white-space: pre-line;
 }
 
@@ -198,11 +206,11 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 46px;
+  min-height: 48px;
   border-radius: 14px;
   background: #efe4ff;
   color: #4a1d7a;
-  font-size: 0.98rem;
+  font-size: 0.99rem;
   font-weight: 800;
   border: 1px solid rgba(95, 37, 159, 0.18);
   text-decoration: none;
@@ -241,12 +249,7 @@
     padding: 22px;
   }
 
-  .resource-card-header {
-    flex-direction: column;
-  }
-
   .resource-campus-pill {
     max-width: 100%;
-    text-align: left;
   }
 }

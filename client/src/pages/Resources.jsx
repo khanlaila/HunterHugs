@@ -31,6 +31,7 @@ function normalizeUrl(url) {
 function normalizeResources(items) {
   return items.map((item, index) => {
     const category = item.Category || "Uncategorized";
+    const url = normalizeUrl(item.URL);
 
     return {
       id: `${item.Name || "resource"}-${index}`,
@@ -41,7 +42,7 @@ function normalizeResources(items) {
       hours: item.Hours || "Contact office for hours",
       eligibility: item.Eligibility || "Eligibility details not listed.",
       requiredDocs: item["Required Docs"] || "Not listed",
-      url: normalizeUrl(item.URL),
+      url,
     };
   });
 }
@@ -158,10 +159,11 @@ function Resources() {
           {filteredResources.map((resource) => (
             <article key={resource.id} className="resource-card">
               <div className="resource-card-header">
-                <div>
-                  <p className="resource-category">{titleCase(resource.category)}</p>
-                  <h2>{resource.name}</h2>
-                </div>
+                <p className="resource-category">{titleCase(resource.category)}</p>
+                <h2>{resource.name}</h2>
+              </div>
+
+              <div className="resource-badges">
                 <span className="resource-campus-pill">{resource.campus}</span>
               </div>
 
