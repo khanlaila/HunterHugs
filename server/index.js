@@ -5,6 +5,7 @@ require("dotenv").config();
 const connectDB = require("./config/db");
 const usersRouter = require("./routes/users");
 const resourcesRouter = require("./routes/resources");
+const chatRouter = require("./routes/chat");
 
 const app = express();
 const allowedOrigins = (process.env.FRONTEND_URLS || "")
@@ -25,6 +26,7 @@ app.use(
 app.use(express.json());
 app.use("/api/users", usersRouter);
 app.use("/api/resources", resourcesRouter);
+app.use("/api/chat", chatRouter);
 
 app.get("/", (req, res) => {
   res.send("If you see this, then the server is running :)");

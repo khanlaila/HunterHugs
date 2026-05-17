@@ -1,6 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./EligibilityEngine.css";
 import { mockResources } from "../data/mockResources";
+import resourceCatalog from "../data/resources.json";
+import { API_BASE_URL } from "../config/api";
 
 const profileQuestions = [
   {
@@ -91,6 +93,7 @@ const EligibilityEngine = () => {
   });
   const [hasSearched, setHasSearched] = useState(false);
   const [chatInput, setChatInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: "bot",
@@ -167,31 +170,65 @@ const EligibilityEngine = () => {
   const handleSendMessage = () => {
     const question = chatInput.trim();
 
-    if (!question) {
+    if (!question || isSending) {
       return;
     }
 
-    const resourceNames = matchedResources
-      .slice(0, 3)
-      .map((resource) => resource.name)
-      .join(", ");
-
-  //FUTURE GEMINI CONNECTION:
-  //Later replace this mock botReply with a fetch call to POST http://localhost:5000/api/chat
-  //Send the user's question, profile, and matchedResources to the backend.
-
-    const botReply =
-      matchedResources.length > 0
-        ? `Based on your profile, your strongest matches are: ${resourceNames}. For now, this is a mock chatbot response. Later, Gemini can use these matched resources to answer your question more specifically.`
-        : "I do not have matched resources yet. Fill out your profile and click Find My Resources first.";
+    const topMatches = matchedResources.slice(0, 5).map((resource) => ({
+      id: resource.id,
+      name: resource.name,
+      category: resource.category,
+      location: resource.location,
+      description: resource.description,
+      eligibilitySummary: resource.eligibilitySummary,
+      sourceUrl: resource.sourceUrl,
+    }));
 
     setMessages((previousMessages) => [
       ...previousMessages,
       { sender: "user", text: question },
-      { sender: "bot", text: botReply },
     ]);
-
     setChatInput("");
+    setIsSending(true);
+
+    async function sendChatMessage() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question,
+            profile,
+            matchedResources: topMatches,
+            resourceCatalog,
+          }),
+        });
+
+        const data = await response.json();
+        const botReply =
+          data.reply ||
+          "I could not generate a response just now. Try again in a moment.";
+
+        setMessages((previousMessages) => [
+          ...previousMessages,
+          { sender: "bot", text: botReply },
+        ]);
+      } catch (error) {
+        setMessages((previousMessages) => [
+          ...previousMessages,
+          {
+            sender: "bot",
+            text: "I could not reach the chat service. Check your server connection and try again.",
+          },
+        ]);
+      } finally {
+        setIsSending(false);
+      }
+    }
+
+    sendChatMessage();
   };
 
   return (
@@ -289,7 +326,7 @@ const EligibilityEngine = () => {
 
         <section className="chat-panel">
           <div className="chat-header">
-            <h2>HunterHugs AI</h2>
+            <h2>Hunter Navigator</h2>
             <p>Your personal resource assistant</p>
           </div>
 
@@ -313,6 +350,7 @@ const EligibilityEngine = () => {
               placeholder="Ask about your matched resources..."
               value={chatInput}
               onChange={(event) => setChatInput(event.target.value)}
+              disabled={isSending}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleSendMessage();
@@ -320,8 +358,8 @@ const EligibilityEngine = () => {
               }}
             />
 
-            <button className="send-button" onClick={handleSendMessage}>
-              Send
+            <button className="send-button" onClick={handleSendMessage} disabled={isSending}>
+              {isSending ? "Sending..." : "Send"}
             </button>
           </div>
         </section>
