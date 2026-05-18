@@ -66,6 +66,20 @@ function matchesQuery(resource, query) {
 
   return haystack.includes(query.toLowerCase());
 }
+function getTextSizeClass(value) {
+  const length = String(value || "").trim().length;
+  if (length > 220) return "text-size-xs";
+  if (length > 140) return "text-size-sm";
+  if (length > 90) return "text-size-md";
+  return "text-size-base";
+}
+function getTitleSizeClass(value) {
+  const length = String(value || "").trim().length;
+  if (length > 60) return "title-size-xs";
+  if (length > 40) return "title-size-sm";
+  if (length > 24) return "title-size-md";
+  return "title-size-base";
+}
 
 function Resources() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -108,6 +122,7 @@ function Resources() {
       setSearchParams({});
     }
   };
+
 
   return (
     <main className="resources-page">
@@ -160,7 +175,7 @@ function Resources() {
             <article key={resource.id} className="resource-card">
               <div className="resource-card-header">
                 <p className="resource-category">{titleCase(resource.category)}</p>
-                <h2>{resource.name}</h2>
+                <h2 className={`resource-title ${getTitleSizeClass(resource.name)}`}>{resource.name}</h2>
               </div>
 
               <div className="resource-badges">
@@ -170,15 +185,17 @@ function Resources() {
               <dl className="resource-details">
                 <div>
                   <dt>Hours</dt>
-                  <dd>{resource.hours}</dd>
+                  <dd className={getTextSizeClass(resource.hours)}>{resource.hours}</dd>
                 </div>
                 <div>
                   <dt>Eligibility</dt>
-                  <dd>{resource.eligibility}</dd>
+                  <dd className={`${getTextSizeClass(resource.eligibility)} eligibility-text`}>
+                    {resource.eligibility}
+                  </dd>
                 </div>
                 <div>
                   <dt>Required Docs</dt>
-                  <dd>{resource.requiredDocs}</dd>
+                  <dd className={getTextSizeClass(resource.requiredDocs)}>{resource.requiredDocs}</dd>
                 </div>
               </dl>
 

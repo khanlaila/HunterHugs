@@ -111,7 +111,7 @@
   max-width: 1240px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -119,7 +119,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-height: 100%;
+  min-height: 460px;
+  height: auto;
   min-width: 0;
   padding: 22px;
   border: 1px solid rgba(95, 37, 159, 0.12);
@@ -149,17 +150,73 @@
   font-size: 1.25rem;
   line-height: 1.18;
   overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.resource-title {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.title-size-base {
+  font-size: 1.25rem !important;
+}
+
+.title-size-md {
+  font-size: 1.06rem !important;
+}
+
+.title-size-sm {
+  font-size: 0.94rem !important;
+}
+
+.title-size-xs {
+  font-size: 0.84rem !important;
+}
+
+.resource-details .eligibility-text {
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: initial;
+  overflow: visible;
+}
+
+
+.text-size-base {
+  font-size: inherit;
+}
+
+.text-size-md {
+  font-size: 0.96em;
+  line-height: 1.5;
+}
+
+.text-size-sm {
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
+.text-size-xs {
+  font-size: 0.84em;
+  line-height: 1.4;
 }
 
 .resource-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  justify-content: center;
 }
 
 .resource-campus-pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   max-width: 100%;
   border-radius: 999px;
   padding: 6px 12px;
@@ -168,21 +225,23 @@
   font-size: 12px;
   font-weight: 700;
   line-height: 1.35;
-  text-align: left;
+  text-align: center;
   overflow-wrap: anywhere;
 }
 
 .resource-details {
   display: grid;
-  gap: 16px;
+  gap: 10px;
   margin: 0;
-  padding-top: 4px;
+  padding-top: 2px;
   border-top: 1px solid rgba(95, 37, 159, 0.08);
+  flex: 1;
+  min-height: 0;
 }
 
 .resource-details div {
   display: grid;
-  gap: 6px;
+  gap: 3px;
 }
 
 .resource-details dt {
@@ -201,6 +260,10 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .resource-card-footer {
@@ -220,6 +283,7 @@
   font-weight: 800;
   border: 1px solid rgba(95, 37, 159, 0.18);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .resource-card-footer a:hover {
@@ -257,5 +321,17 @@
 
   .resource-campus-pill {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .resources-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .resources-grid {
+    grid-template-columns: 1fr;
   }
 }
