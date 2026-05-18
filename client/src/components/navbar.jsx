@@ -1,8 +1,17 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/hunter-hugs-logo.png";
 import "./navbar.css";
 
 function Navbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+    navigate("/", { replace: true });
+  };
   return (
     <header className="navbar">
       <Link to="/home" className="navbar-logo">
@@ -29,7 +38,7 @@ function Navbar() {
         <NavLink to="/profile" className="nav-link">
           Profile
         </NavLink>
-        <button className="logout-button" type="button">
+        <button className="logout-button" type="button" onClick={handleLogout}>
           Logout
         </button>
       </nav>

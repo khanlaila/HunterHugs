@@ -8,13 +8,18 @@ const resourcesRouter = require("./routes/resources");
 const chatRouter = require("./routes/chat");
 
 const app = express();
-const allowedOrigins = (process.env.FRONTEND_URLS || "")
+const configuredOrigins = (process.env.FRONTEND_URLS || "")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+const allowedOrigins = Array.from(
+  new Set(["http://localhost:5173", "http://127.0.0.1:5173", ...configuredOrigins])
+);
 
 app.use(
   cors({
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     origin(origin, callback) {
       if (!origin) return callback(null, true);
       if (!allowedOrigins.length) return callback(null, true);

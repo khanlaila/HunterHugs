@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config/api";
 import "./Landing.css";
 
 function SignUp() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -13,6 +14,7 @@ function SignUp() {
     citizenshipStatus: "",
     address: "",
     campus: "",
+    major: "",
     enrollmentStatus: "",
   });
   const [feedback, setFeedback] = useState("");
@@ -39,6 +41,7 @@ function SignUp() {
         citizenshipStatus: form.citizenshipStatus,
         address: form.address,
         campus: form.campus,
+        major: form.major,
         enrollmentStatus: form.enrollmentStatus,
       };
       const response = await fetch(`${API_BASE_URL}/api/users/register`, {
@@ -48,12 +51,36 @@ function SignUp() {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create account.");
+        throw new Error(data.error ? `${data.message} ${data.error}` : data.message || "Failed to create account.");
       }
-      setFeedback("Account created. Please verify your email before signing in.");
-      if (data.verificationLink) {
-        setVerificationLink(data.verificationLink);
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
       }
+      let resolvedUser = data.user;
+      if (data.token) {
+        try {
+          const meResponse = await fetch(
+            `${API_BASE_URL}/api/users/me?email=${encodeURIComponent(form.email || "")}`,
+            {
+              headers: { Authorization: `Bearer ${data.token}` },
+              cache: "no-store",
+            }
+          );
+          if (meResponse.ok) {
+            const meData = await meResponse.json();
+            if (meData?.user) {
+              resolvedUser = meData.user;
+            }
+          }
+        } catch {
+        }
+      }
+      if (resolvedUser) {
+        localStorage.setItem("user", JSON.stringify(resolvedUser));
+      }
+      setFeedback(data.message || "Account created and signed in.");
+      navigate("/home");
     } catch (error) {
       setIsError(true);
       setFeedback(error.message);
@@ -121,11 +148,11 @@ function SignUp() {
             onChange={onChange}
           >
             <option value="">Citizenship Status (optional)</option>
-            <option value="citizen">Citizen</option>
-            <option value="permanent-resident">Permanent Resident</option>
-            <option value="international">International</option>
-            <option value="undocumented">Undocumented</option>
-            <option value="other">Other</option>
+            <option value="Citizen">Citizen</option>
+            <option value="Permanent-Resident">Permanent Resident</option>
+            <option value="International">International</option>
+            <option value="Undocumented">Undocumented</option>
+            <option value="Other">Other</option>
           </select>
           <input
             className="auth-input"
@@ -145,22 +172,31 @@ function SignUp() {
           />
           <input
             className="auth-input"
-            name="enrollmentStatus"
+            name="major"
             type="text"
-            placeholder="Enrollment Status (optional)"
+            placeholder="Major"
+            value={form.major}
+            onChange={onChange}
+            required
+          />
+          <select
+            className="auth-input"
+            name="enrollmentStatus"
             value={form.enrollmentStatus}
             onChange={onChange}
-          />
+          >
+            <option value="">Enrollment Status (optional)</option>
+            <option value="Freshman">Freshman</option>
+            <option value="Sophomore">Sophomore</option>
+            <option value="Junior">Junior</option>
+            <option value="Senior">Senior</option>
+          </select>
           <button type="submit" className="auth-btn">
             Create Account
           </button>
         </form>
         {feedback ? <p className={`auth-feedback ${isError ? "auth-error" : ""}`}>{feedback}</p> : null}
-        {verificationLink ? (
-          <p className="auth-footer-link">
-            Email sending is not configured. <a href={verificationLink}>Verify your account here</a>.
-          </p>
-        ) : null}
+        {verificationLink ? <p className="auth-footer-link"><a href={verificationLink}>Verify your account here</a>.</p> : null}
         <p className="auth-footer-link">
           Already registered? <Link to="/signin">Sign in</Link>
         </p>

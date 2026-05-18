@@ -32,8 +32,27 @@ function SignIn() {
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
+      let resolvedUser = data.user;
+      if (data.token) {
+        try {
+          const meResponse = await fetch(
+            `${API_BASE_URL}/api/users/me?email=${encodeURIComponent(form.email || "")}`,
+            {
+            headers: { Authorization: `Bearer ${data.token}` },
+            cache: "no-store",
+            }
+          );
+          if (meResponse.ok) {
+            const meData = await meResponse.json();
+            if (meData?.user) {
+              resolvedUser = meData.user;
+            }
+          }
+        } catch {
+        }
+      }
+      if (resolvedUser) {
+        localStorage.setItem("user", JSON.stringify(resolvedUser));
       }
       navigate("/home");
     } catch (error) {

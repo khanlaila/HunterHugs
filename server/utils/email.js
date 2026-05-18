@@ -1,6 +1,7 @@
 async function sendVerificationEmail({ to, verificationLink }) {
   const resendApiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM || process.env.SMTP_FROM || "no-reply@hunterhugs.local";
+  const fromEmail =
+    process.env.RESEND_FROM || process.env.SMTP_FROM || "Hunter Hugs <onboarding@resend.dev>";
 
   if (!resendApiKey) {
     console.log(`[EMAIL_FALLBACK] Verification link for ${to}: ${verificationLink}`);
@@ -24,7 +25,14 @@ async function sendVerificationEmail({ to, verificationLink }) {
 
   if (!response.ok) {
     const errorBody = await response.text();
-    throw new Error(`Resend API error (${response.status}): ${errorBody}`);
+    console.error(
+      `[RESEND_ERROR] Failed to send verification email to ${to}. Status: ${response.status}. Body: ${errorBody}`
+    );
+    return {
+      delivered: false,
+      reason: `Resend API error (${response.status})`,
+      providerResponse: errorBody,
+    };
   }
 
   return { delivered: true };

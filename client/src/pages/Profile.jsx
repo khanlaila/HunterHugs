@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config/api";
 import "./Profile.css";
 
 function formatCurrency(value) {
@@ -25,10 +26,45 @@ function readUser() {
 function valueOrFallback(value) {
   return value && String(value).trim() ? value : "Not provided";
 }
+function formatCitizenshipStatus(value) {
+  if (!value || !String(value).trim()) return "Not provided";
+  return String(value)
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
 
 const Profile = () => {
-  const user = useMemo(() => readUser(), []);
-  const profile = user?.profile || {};
+  const [user, setUser] = useState(() => readUser());
+  const [profileLoadError, setProfileLoadError] = useState("");
+  const rawProfile = user?.profile || {};
+  const profile = {
+    studentId: rawProfile.studentId ?? user?.studentId ?? "",
+    campus: rawProfile.campus ?? user?.campus ?? "",
+    major: rawProfile.major ?? rawProfile.fieldOfStudy ?? rawProfile.program ?? user?.major ?? "",
+    enrollmentStatus: rawProfile.enrollmentStatus ?? user?.enrollmentStatus ?? "",
+    address:
+      rawProfile.address ??
+      rawProfile.homeAddress ??
+      rawProfile.streetAddress ??
+      user?.address ??
+      user?.homeAddress ??
+      "",
+    citizenshipStatus:
+      rawProfile.citizenshipStatus ??
+      rawProfile.citizenship ??
+      user?.citizenshipStatus ??
+      user?.citizenship ??
+      "",
+    estimatedIncome:
+      rawProfile.estimatedIncome ??
+      rawProfile.salary ??
+      rawProfile.income ??
+      user?.estimatedIncome ??
+      user?.salary ??
+      user?.income ??
+      "",
+  };
   const [isEditing, setIsEditing] = useState(false);
   const [editableProfile, setEditableProfile] = useState({
     campus: valueOrFallback(profile.campus) === "Not provided" ? "" : profile.campus,
@@ -45,6 +81,55 @@ const Profile = () => {
     const { name, value } = event.target;
     setEditableProfile((prev) => ({ ...prev, [name]: value }));
   };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const cachedUser = readUser();
+    const fallbackEmail = cachedUser?.email || user?.email || "";
+    if (!token) return;
+
+    let isMounted = true;
+    async function loadCurrentUser() {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/users/me?email=${encodeURIComponent(fallbackEmail)}`,
+          {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+          }
+        );
+        if (!response.ok) {
+          setProfileLoadError("Could not refresh profile data from server.");
+          return;
+        }
+        const data = await response.json();
+        if (!isMounted || !data?.user) return;
+        const nextUser = data.user;
+        const nextProfile = nextUser.profile || {};
+        setProfileLoadError("");
+        setUser(nextUser);
+        localStorage.setItem("user", JSON.stringify(nextUser));
+        setEditableProfile((prev) => ({
+          ...prev,
+          campus: nextProfile.campus || "",
+          enrollmentStatus: nextProfile.enrollmentStatus || "",
+          address: nextProfile.address || nextProfile.homeAddress || nextProfile.streetAddress || "",
+          citizenshipStatus: nextProfile.citizenshipStatus || nextProfile.citizenship || "",
+          estimatedIncome:
+            nextProfile.estimatedIncome === undefined || nextProfile.estimatedIncome === null
+              ? nextProfile.salary === undefined || nextProfile.salary === null
+                ? ""
+                : String(nextProfile.salary)
+              : String(nextProfile.estimatedIncome),
+        }));
+      } catch {
+        setProfileLoadError("Could not refresh profile data from server.");
+      }
+    }
+    loadCurrentUser();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (!user) {
     return (
@@ -76,6 +161,7 @@ const Profile = () => {
         <h2>
           {valueOrFallback(user.fullName)} <span className="pronouns">{valueOrFallback(user.email)}</span>
         </h2>
+        {profileLoadError ? <p>{profileLoadError}</p> : null}
       </div>
 
       <div className="profile-details">
@@ -113,6 +199,11 @@ const Profile = () => {
                   )}
                 </td>
               </tr>
+              <tr>
+                <td>Major</td>
+                <td>:</td>
+                <td>{valueOrFallback(profile.major)}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -136,7 +227,7 @@ const Profile = () => {
                 onChange={handleChange}
               />
             ) : (
-              <span>{valueOrFallback(profile.citizenshipStatus)}</span>
+              <span>{formatCitizenshipStatus(profile.citizenshipStatus)}</span>
             )}
           </div>
           <div className="detail-row">

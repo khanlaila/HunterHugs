@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Navigate, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/navbar";
 import Home from "./pages/Home";
 import Resources from "./pages/Resources";
@@ -14,6 +14,11 @@ function App() {
   const location = useLocation();
   const publicAuthPages = ["/", "/signin", "/signup", "/verify-email"];
   const shouldShowNavbar = !publicAuthPages.includes(location.pathname);
+  const isAuthenticated = Boolean(localStorage.getItem("token"));
+
+  function renderPrivateRoute(element) {
+    return isAuthenticated ? element : <Navigate to="/signin" replace />;
+  }
   return (
     <>
       {shouldShowNavbar ? <Navbar /> : null}
@@ -22,10 +27,10 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/resources" element={<Resources />} />
-        <Route path="/eligibility" element={<Chatbot />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/home" element={renderPrivateRoute(<Home />)} />
+        <Route path="/resources" element={renderPrivateRoute(<Resources />)} />
+        <Route path="/eligibility" element={renderPrivateRoute(<Chatbot />)} />
+        <Route path="/profile" element={renderPrivateRoute(<Profile />)} />
       </Routes>
     </>
   );

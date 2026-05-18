@@ -10,6 +10,7 @@ function VerifyEmail() {
 
   useEffect(() => {
     const token = searchParams.get("token");
+    const email = searchParams.get("email");
     if (!token) {
       setStatus("error");
       setMessage("Missing verification token.");
@@ -21,11 +22,17 @@ function VerifyEmail() {
         const response = await fetch(`${API_BASE_URL}/api/users/verify-email`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token }),
+          body: JSON.stringify({ token, email }),
         });
         const data = await response.json();
         if (!response.ok) {
           throw new Error(data.message || "Verification failed.");
+        }
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
         }
         setStatus("success");
         setMessage(data.message || "Email verified successfully.");
@@ -46,7 +53,7 @@ function VerifyEmail() {
         <p className="auth-footer-link">
           {status === "success" ? (
             <>
-              Verification complete. <Link to="/signin">Sign in</Link>
+              Verification complete. <Link to="/home">Continue</Link>
             </>
           ) : (
             <>

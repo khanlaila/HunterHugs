@@ -43,6 +43,7 @@ const pendingUserVerificationSchema = new mongoose.Schema(
       },
       address: { type: String, trim: true, default: "" },
       campus: { type: String, trim: true, default: "" },
+      major: { type: String, trim: true, default: "" },
       enrollmentStatus: { type: String, trim: true, default: "" },
     },
   },
