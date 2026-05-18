@@ -84,6 +84,162 @@ function getMatchScore(resource, profile) {
   return Math.round((score / checks.length) * 100);
 }
 
+
+const ROADMAP_STORAGE_KEY = "hunterHugsRoadmap";
+
+function addDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result.toISOString().split("T")[0];
+}
+
+function getDefaultTasksForResource(resource) {
+  const today = new Date();
+  const category = resource.category?.toLowerCase() || "";
+
+  if (category.includes("financial")) {
+    return [
+      {
+        id: crypto.randomUUID(),
+        title: "Review the resource eligibility details",
+        description: `Read the eligibility information for ${resource.name}.`,
+        dueDate: addDays(today, 1),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Gather financial documents",
+        description: "Prepare FAFSA, income, aid, or account-related documents if needed.",
+        dueDate: addDays(today, 2),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Contact the office",
+        description: `Reach out to ${resource.name} for next steps.`,
+        dueDate: addDays(today, 3),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Follow up",
+        description: "Follow up if you do not receive a response.",
+        dueDate: addDays(today, 7),
+        completed: false,
+      },
+    ];
+  }
+
+  if (category.includes("food")) {
+    return [
+      {
+        id: crypto.randomUUID(),
+        title: "Confirm what you need to bring",
+        description: "Check if you need a CUNY ID, appointment, or other proof.",
+        dueDate: addDays(today, 1),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Check location and hours",
+        description: `Review the location and schedule for ${resource.name}.`,
+        dueDate: addDays(today, 2),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Visit the resource",
+        description: "Plan a time to visit or contact the resource.",
+        dueDate: addDays(today, 4),
+        completed: false,
+      },
+    ];
+  }
+
+  if (category.includes("mental")) {
+    return [
+      {
+        id: crypto.randomUUID(),
+        title: "Review support options",
+        description: `Look over the services offered by ${resource.name}.`,
+        dueDate: addDays(today, 1),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Decide what kind of support you need",
+        description: "Write down whether you need counseling, wellness support, or urgent help.",
+        dueDate: addDays(today, 2),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Schedule or request support",
+        description: `Contact ${resource.name} to ask about next steps.`,
+        dueDate: addDays(today, 3),
+        completed: false,
+      },
+    ];
+  }
+
+  if (category.includes("housing")) {
+    return [
+      {
+        id: crypto.randomUUID(),
+        title: "Write down your housing concern",
+        description: "Briefly explain your current housing situation and what help you need.",
+        dueDate: addDays(today, 1),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Gather proof of enrollment",
+        description: "Prepare your student ID, schedule, or enrollment verification.",
+        dueDate: addDays(today, 2),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Contact the support office",
+        description: `Reach out to ${resource.name} for help or referrals.`,
+        dueDate: addDays(today, 3),
+        completed: false,
+      },
+      {
+        id: crypto.randomUUID(),
+        title: "Follow up within one week",
+        description: "Check back if you do not receive a response.",
+        dueDate: addDays(today, 7),
+        completed: false,
+      },
+    ];
+  }
+
+  return [
+    {
+      id: crypto.randomUUID(),
+      title: "Review resource details",
+      description: `Read the description and eligibility information for ${resource.name}.`,
+      dueDate: addDays(today, 1),
+      completed: false,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "Prepare required information",
+      description: "Gather any documents, ID, or personal information this resource may require.",
+      dueDate: addDays(today, 2),
+      completed: false,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "Contact or visit the resource",
+      description: `Use the link or location listed for ${resource.name}.`,
+      dueDate: addDays(today, 3),
+      completed: false,
+    },
+  ];
+}
+
 const EligibilityEngine = () => {
   const [profile, setProfile] = useState({
     enrollment: "",
@@ -166,6 +322,52 @@ const EligibilityEngine = () => {
       },
     ]);
   };
+
+  const handleAddToRoadmap = (resource) => {
+  const existingRoadmap = JSON.parse(
+    localStorage.getItem(ROADMAP_STORAGE_KEY) || "[]"
+  );
+
+  const alreadyAdded = existingRoadmap.some(
+    (item) => item.resourceId === resource.id
+  );
+
+  if (alreadyAdded) {
+    setMessages((previousMessages) => [
+      ...previousMessages,
+      {
+        sender: "bot",
+        text: `${resource.name} is already in your roadmap.`,
+      },
+    ]);
+    return;
+  }
+
+  const roadmapItem = {
+    id: crypto.randomUUID(),
+    resourceId: resource.id,
+    resourceName: resource.name,
+    category: resource.category,
+    location: resource.location,
+    description: resource.description,
+    sourceUrl: resource.sourceUrl,
+    matchScore: resource.matchScore,
+    createdAt: new Date().toISOString(),
+    tasks: getDefaultTasksForResource(resource),
+  };
+
+  const updatedRoadmap = [...existingRoadmap, roadmapItem];
+
+  localStorage.setItem(ROADMAP_STORAGE_KEY, JSON.stringify(updatedRoadmap));
+
+  setMessages((previousMessages) => [
+    ...previousMessages,
+    {
+      sender: "bot",
+      text: `${resource.name} was added to your roadmap with recommended tasks.`,
+    },
+  ]);
+};
 
   const handleSendMessage = () => {
     const question = chatInput.trim();
@@ -315,9 +517,19 @@ const EligibilityEngine = () => {
                     ))}
                   </div>
 
-                  <a href={resource.sourceUrl} target="_blank" rel="noreferrer">
-                    View resource
-                  </a>
+                  <div className="resource-actions">
+                    <a href={resource.sourceUrl} target="_blank" rel="noreferrer">
+                      View resource
+                    </a>
+
+                    <button
+                      type="button"
+                      className="add-roadmap-btn"
+                      onClick={() => handleAddToRoadmap(resource)}
+                    >
+                      Add to Roadmap
+                    </button>
+                </div>
                 </article>
               ))}
             </div>
