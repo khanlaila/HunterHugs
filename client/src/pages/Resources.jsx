@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import resourcesData from "../data/resources.json";
+import { API_BASE_URL } from "../config/api";
 import "./Resources.css";
 
 function slugify(value) {
@@ -30,18 +30,28 @@ function normalizeUrl(url) {
 
 function normalizeResources(items) {
   return items.map((item, index) => {
-    const category = item.Category || "Uncategorized";
-    const url = normalizeUrl(item.URL);
+    const categoryRaw = item.category || item.Category || "Uncategorized";
+    const category = titleCase(String(categoryRaw).replace(/-/g, " "));
+    const url = normalizeUrl(item.sourceUrl || item.URL || item.contact?.website);
+    const hoursText =
+      item.Hours ||
+      (item.hours?.open || item.hours?.close
+        ? `${item.hours?.open || "Open"}${item.hours?.close ? ` - ${item.hours.close}` : ""}`
+        : "") ||
+      item.contact?.phone ||
+      "Contact office for hours";
+    const eligibilityText = item.eligibilitySummary || item.Eligibility || "Eligibility details not listed.";
+    const requiredDocsText = item.requiredDocs || item["Required Docs"] || item.description || "Not listed";
 
     return {
-      id: `${item.Name || "resource"}-${index}`,
-      name: item.Name || "Unnamed Resource",
+      id: item._id || item.id || `${item.name || item.Name || "resource"}-${index}`,
+      name: item.name || item.Name || "Unnamed Resource",
       category,
       categorySlug: slugify(category),
-      campus: item.Campus || "N/A",
-      hours: item.Hours || "Contact office for hours",
-      eligibility: item.Eligibility || "Eligibility details not listed.",
-      requiredDocs: item["Required Docs"] || "Not listed",
+      campus: item.campus || item.Campus || "N/A",
+      hours: hoursText,
+      eligibility: eligibilityText,
+      requiredDocs: requiredDocsText,
       url,
     };
   });
@@ -85,8 +95,37 @@ function Resources() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState(() => searchParams.get("q") || "");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
-  const resources = useMemo(() => normalizeResources(resourcesData), []);
+  useEffect(() => {
+    let isMounted = true;
+    async function loadResources() {
+      try {
+        setLoading(true);
+        setLoadError("");
+        const response = await fetch(`${API_BASE_URL}/api/resources?limit=100`, { cache: "no-store" });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load resources.");
+        }
+        const normalized = normalizeResources(Array.isArray(data.resources) ? data.resources : []);
+        if (!isMounted) return;
+        setResources(normalized);
+      } catch (error) {
+        if (!isMounted) return;
+        setLoadError(error.message || "Failed to load resources.");
+        setResources([]);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    loadResources();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const categories = useMemo(() => {
     const uniqueCategories = Array.from(new Set(resources.map((item) => item.category))).sort(
@@ -169,7 +208,16 @@ function Resources() {
         </p>
       </section>
 
-      {filteredResources.length > 0 ? (
+      {loading ? (
+        <div className="empty-state">
+          <h2>Loading resources...</h2>
+        </div>
+      ) : loadError ? (
+        <div className="empty-state">
+          <h2>Could not load resources</h2>
+          <p>{loadError}</p>
+        </div>
+      ) : filteredResources.length > 0 ? (
         <section className="resources-grid">
           {filteredResources.map((resource) => (
             <article key={resource.id} className="resource-card">
