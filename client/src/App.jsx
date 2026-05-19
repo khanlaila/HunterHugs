@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import Landing from "./pages/Landing";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Roadmap from "./pages/Roadmap";
 import VerifyEmail from "./pages/VerifyEmail";
 import "./App.css";
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/resources" element={renderPrivateRoute(<Resources />)} />
         <Route path="/eligibility" element={renderPrivateRoute(<Chatbot />)} />
         <Route path="/profile" element={renderPrivateRoute(<Profile />)} />
+        <Route path="/roadmap" element={renderPrivateRoute(<Roadmap />)} />
       </Routes>
     </>
   );

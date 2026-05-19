@@ -369,3 +369,26 @@
     height: 600px;
   }
 }
+
+.resource-actions {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.add-roadmap-btn {
+  border: 2px solid #5f259f;
+  background: #ffffff;
+  color: #5f259f;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-roadmap-btn:hover {
+  background: #eadcff;
+}
